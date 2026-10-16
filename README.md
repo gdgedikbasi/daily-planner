@@ -1,42 +1,47 @@
 # Smart Daily Planner
 
-A smart daily planner built with React and Vite to manage daily tasks, track progress, and organize activities.
+Smart Daily Planner, günlük görevleri düzenlemek ve verimliliği artırmak amacıyla React kullanılarak geliştirilen bir günlük planlama uygulamasıdır.
 
-## Features
+## Özellikler
 
-- Add and delete tasks
-- Mark tasks as completed
-- Track daily progress with a percentage indicator
-- Search and filter tasks
-- Receive simple AI-based suggestions
-- Animated task cards
-- Save tasks in local storage
+- Günlük görev ekleme ve silme
+- Görevleri tamamlandı olarak işaretleme
+- Günlük ilerleme yüzdesini görüntüleme
+- Görev adına göre arama yapma
+- Tamamlanan ve bekleyen görevleri filtreleme
+- Görevlere öncelik belirleme
+- Önemli görevleri sabitleme
+- Sürükle ve bırak ile görevleri sıralama
+- Görevleri localStorage ile kaydetme
+- Tarihe göre görevleri görüntüleme ve haftalık görünüm
+- Basit yapay zekâ tarzı verimlilik önerileri
 
-## Technologies
+## Kullanılan Teknolojiler
 
 - React
-- Vite
 - JavaScript
+- Vite
 - CSS
-- Local Storage
 - Framer Motion
 - Lucide React
+- localStorage
 
-## Getting Started
+## Kurulum ve Çalıştırma
 
-1. Clone the repository.
-2. Install dependencies:
+1. Projeyi bilgisayarına indir veya klonla.
+2. Terminalde proje klasörüne gir.
+3. Gerekli paketleri yükle:
 
    ```bash
    npm install
    ```
 
-3. Start the development server:
+4. Geliştirme sunucusunu başlat:
 
    ```bash
    npm run dev
    ```
 
-## Project Status
+## Proje Durumu
 
-This project is under active development. New features and improvements will be added over time.
+Proje geliştirme aşamasındadır. Yeni özellikler eklenerek kullanıcı deneyiminin ve uygulamanın işlevselliğinin iyileştirilmesi hedeflenmektedir.
