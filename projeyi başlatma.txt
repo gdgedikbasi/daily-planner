@@ -1,0 +1,3 @@
+dosyayı aç : File> Open Folder> Masaüstü> ReactProjects> daily-planner
+vscode terminal: npm install (bazen gerekebilir hep yapma)
+ardından npm run dev
