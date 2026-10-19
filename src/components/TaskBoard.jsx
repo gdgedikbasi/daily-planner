@@ -124,6 +124,8 @@ export default function TaskBoard({ selectedDate }) {
   const done = tasks.filter((t) => t.done).length;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
 
+  const pending = total-done;
+
   console.log({ total, done, percent, tasks });
 
   return (
@@ -138,6 +140,30 @@ export default function TaskBoard({ selectedDate }) {
           />
         </div>
       </div>
+
+      {/*Gelişmiş İstatistikler*/}
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Toplam Görev</div>
+          <div style={styles.statValue}>{total}</div>
+        </div>
+
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Tamamlanan</div>
+          <div style={styles.statValue}>{done}</div>
+        </div>
+
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Bekleyen</div>
+          <div style={styles.statValue}>{pending}</div>
+        </div>
+
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Başarı Oranı</div>
+          <div style={styles.statValue}>%{percent}</div>
+        </div>
+      </div>
+
 
       {/*Görev Arama*/}
       <div style={styles.searchBox}>
@@ -352,5 +378,32 @@ const styles = {
     background: "#6366f1",
     color: "#ffffff",
     border: "1px solid #6366f1",
+  },
+
+    statsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: 12,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  statCard: {
+    padding: 16,
+    borderRadius: 12,
+    background: "#1f2937",
+    border: "1px solid #374151",
+  },
+
+  statLabel: {
+    color: "#9ca3af",
+    fontSize: 13,
+    marginBottom: 8,
+  },
+
+  statValue: {
+    color: "#f9fafb",
+    fontSize: 26,
+    fontWeight: "bold",
   },
 };
