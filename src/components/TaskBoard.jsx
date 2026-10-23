@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { CheckCircle, Circle, Trash2, Pin } from "lucide-react";
 import { Reorder, motion } from "framer-motion";
+import { calculateStats } from "../utils/taskStats";
 
 export default function TaskBoard({ selectedDate }) {
   const [task, setTask] = useState("");
@@ -120,13 +121,8 @@ export default function TaskBoard({ selectedDate }) {
     });
   };
 
-  const total = tasks.length;
-  const done = tasks.filter((t) => t.done).length;
-  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+  const { total, done, pending, percent } = calculateStats(tasks);
 
-  const pending = total-done;
-
-  console.log({ total, done, percent, tasks });
 
   return (
     <div style={styles.container}>
