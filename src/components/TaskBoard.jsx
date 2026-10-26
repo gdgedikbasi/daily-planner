@@ -5,6 +5,8 @@ import { calculateStats } from "../utils/taskStats";
 
 export default function TaskBoard({ selectedDate }) {
   const [task, setTask] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [dueTime, setDueTime] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filter,setFilter]=useState("all");
@@ -64,6 +66,46 @@ export default function TaskBoard({ selectedDate }) {
     }));
   };
 
+  const getDeadlineStatus=(task)=>{
+    if(task.done){
+      return{
+        text:"Tamamlandı",
+        color:"#22c55e",
+      }
+    }
+
+    if(!task.dueDate){
+      return null;
+    }
+
+    const now=new Date();
+    const deadline=new Date(
+      `${task.dueDate}T${task.dueTime||"23:59"}:00`
+    );
+
+    if(deadline<now){
+      return{
+        text:"Süresi doldu",
+        color:"#ef4444",
+      };
+    }
+
+    const timeLeft=deadline.getTime()-now.getTime();
+    const oneDay=24*60*60*1000;
+
+    if(timeLeft<=oneDay){
+      return{
+        text:"Yaklaşıyor",
+        color:"#f59e0b",
+      };
+    }
+
+    return {
+      text: "Zamanında",
+      color: "#22c55e",
+    };
+  };
+
   const addTask = () => {
     if (!task.trim()) return;
 
@@ -72,12 +114,16 @@ export default function TaskBoard({ selectedDate }) {
       text: task,
       done: false,
       createdAt: new Date().toISOString(),
+      dueDate:dueDate||"",
+      dueTime:dueTime||"",
       pinned: false,
       priority: "medium",
     };
 
     updateTasks([...tasks, newTask]);
     setTask("");
+    setDueDate("");
+    setDueTime("");
   };
 
   const toggleTask = (id) => {
@@ -211,6 +257,30 @@ export default function TaskBoard({ selectedDate }) {
         </button>
       </div>
 
+      
+      <div style={styles.deadlineBox}>
+        <label style={styles.deadlineLabel}>
+          Son tarih:
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            style={styles.dateTimeInput}
+          />
+        </label>
+
+        <label style={styles.deadlineLabel}>
+          Saat:
+          <input
+            type="time"
+            value={dueTime}
+            onChange={(e) => setDueTime(e.target.value)}
+            style={styles.dateTimeInput}
+          />
+        </label>
+      </div>
+
+
       <Reorder.Group
         axis="y"
         values={filteredTasks}
@@ -252,6 +322,43 @@ export default function TaskBoard({ selectedDate }) {
                     ⏰ {formatDate(t.createdAt)}
                   </small>
                 )}
+
+                {(t.dueDate || t.dueTime) && (
+                  <small style={styles.deadlineText}>
+                    📅 Son tarih:{" "}
+                    {t.dueDate
+                      ? new Date(t.dueDate + "T12:00:00").toLocaleDateString("tr-TR", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : "Belirtilmedi"}
+                    {t.dueTime && ` • ${t.dueTime}`}
+                  </small>
+                )}
+                
+                {(() => {
+                  const status = getDeadlineStatus(t);
+
+                  if (!status) return null;
+
+                  return (
+                    <small
+                      style={{
+                        display: "inline-block",
+                        marginTop: 6,
+                        padding: "4px 8px",
+                        borderRadius: 6,
+                        backgroundColor: `${status.color}20`,
+                        color: status.color,
+                        fontSize: 12,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {status.text}
+                    </small>
+                  );
+                })()}
               </div>
 
               {/* ✅ PRIORITY BUTTON */}
@@ -401,5 +508,35 @@ const styles = {
     color: "#f9fafb",
     fontSize: 26,
     fontWeight: "bold",
+  },
+
+  deadlineBox:{
+    display:"flex",
+    gap:12,
+    marginTop:12,
+    flexWrap:"wrap",
+  },
+
+  deadlineText:{
+    display:"block",
+    marginTop:6,
+    color:"#a5b4fc",
+    fontSize:12,
+  },
+
+  deadlineLabel:{
+    display:"flex",
+    flexDirection:"column",
+    gap:6,
+    color:"#d1d5db",
+    fontSize:13,
+  },
+
+  dateTimeInput:{
+    padding:8,
+    borderRadius:8,
+    border:"1px solid #374151",
+    background:"#1f2937",
+    color:"#fff",
   },
 };
