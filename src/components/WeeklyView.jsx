@@ -47,6 +47,18 @@ export default function WeeklyView({ selectedDate, setSelectedDate }) {
 
   const selectedKey = formatDate(selectedDate);
 
+  //haftanın her günü için tamamlanan görev sayısı
+  const completedCounts=days.map((day)=>({
+    date:day,
+    count:(fixedTasks[day]||[]).filter((task)=>task.done).length,
+  }));
+
+  //çubukların yüksekliğini hesaplamak için en yüksek değer
+  const maxCompleted=Math.max(
+    1,
+    ...completedCounts.map((day)=>day.count)
+  );
+
   return (
     <div style={styles.container}>
       <h2>📆 Haftalık Görünüm</h2>
@@ -116,6 +128,33 @@ export default function WeeklyView({ selectedDate, setSelectedDate }) {
           );
         })}
       </div>
+
+      <div style={styles.chartContainer}>
+        <h3>📊 Haftalık Tamamlanan Görevler</h3>
+
+        <div style={styles.chart}>
+          {completedCounts.map((day)=>(
+            <div key={day.date} style={styles.barColumn}>
+              <span style={styles.barValue}>{day.count}</span>
+                <div style={styles.barTrack}>
+                  <div 
+                    style={{
+                      ...styles.bar,
+                      height:`${(day.count/maxCompleted)*100}%`,
+                    }}
+                  />      
+                </div>
+              <span style={styles.barLabel}>
+                {day.date.slice(5)}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p style={styles.chartDescription}>
+          Son 7 günde tamamladığın görev sayıları
+        </p>
+      </div>
     </div>
   );
 }
@@ -176,5 +215,68 @@ const styles = {
   empty: {
     fontSize: 12,
     color: "#9ca3af",
+  },
+
+  
+  chartContainer: {
+    marginTop: 28,
+    padding: 20,
+    borderRadius: 16,
+    background: "#111827",
+  },
+
+  chart: {
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "space-around",
+    gap: 12,
+    height: 220,
+    marginTop: 20,
+  },
+
+  barColumn: {
+    flex: 1,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 8,
+    minWidth: 0,
+  },
+
+  barValue: {
+    fontSize: 13,
+    color: "#d1d5db",
+  },
+
+  barTrack: {
+    width: "100%",
+    maxWidth: 42,
+    flex: 1,
+    display: "flex",
+    alignItems: "flex-end",
+    background: "#1f2937",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+
+  bar: {
+    width: "100%",
+    minHeight: 0,
+    background: "#10b981",
+    borderRadius: 8,
+    transition: "height 0.3s ease",
+  },
+
+  barLabel: {
+    fontSize: 11,
+    color: "#9ca3af",
+  },
+
+  chartDescription: {
+    color: "#9ca3af",
+    fontSize: 13,
+    marginTop: 16,
   },
 };

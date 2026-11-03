@@ -3,13 +3,16 @@ import { CheckCircle, Circle, Trash2, Pin } from "lucide-react";
 import { Reorder, motion } from "framer-motion";
 import { calculateStats } from "../utils/taskStats";
 
+
 export default function TaskBoard({ selectedDate }) {
   const [task, setTask] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [dueTime, setDueTime] = useState("");
 
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filter,setFilter]=useState("all");
+
 
   const [allTasks, setAllTasks] = useState(() => {
     const saved = localStorage.getItem("tasksByDate");

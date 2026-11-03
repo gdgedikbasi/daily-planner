@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import TaskBoard from "../components/TaskBoard";
 import AIPanel from "../components/AIPanel";
 import WeeklyView from "../components/WeeklyView";
 
 export default function DashboardLayout() {
-  const [active, setActive] = useState("today");
+  const [active, setActive] = useState(
+    ()=>localStorage.getItem("activeView")||"today"
+  );
+
+  useEffect(()=>{
+    localStorage.setItem("activeView",active);
+  },[active]);
 
   // ✅ STRING formatta tarih (bozmuyoruz)
   const [selectedDate, setSelectedDate] = useState(
