@@ -373,6 +373,7 @@ export default function TaskBoard({ selectedDate }) {
               </button>
 
               <Pin
+                data-testid="pin-task"
                 size={18}
                 onClick={() => togglePin(t.id)}
                 style={{
@@ -382,6 +383,7 @@ export default function TaskBoard({ selectedDate }) {
               />
 
               <Trash2
+                data-testid="delete-task"
                 size={18}
                 onClick={() => deleteTask(t.id)}
                 style={{ cursor: "pointer" }}

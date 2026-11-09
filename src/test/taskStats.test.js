@@ -1,6 +1,6 @@
 
 import { describe, it, expect } from "vitest";
-import { calculateStats } from "./utils/taskStats";
+import { calculateStats } from "../utils/taskStats";
 
 describe("Görev istatistikleri", () => {
   it("toplam, tamamlanan ve bekleyen görevleri doğru hesaplar", () => {
