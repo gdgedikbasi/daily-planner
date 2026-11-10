@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import TaskBoard from "../components/TaskBoard";
 import AIPanel from "../components/AIPanel";
 import WeeklyView from "../components/WeeklyView";
+import StatsView from "../components/StatsView";
 
 export default function DashboardLayout() {
   const [active, setActive] = useState(
@@ -12,6 +13,16 @@ export default function DashboardLayout() {
   useEffect(()=>{
     localStorage.setItem("activeView",active);
   },[active]);
+
+
+  const [allTasks,setAllTasks]=useState(()=>{
+    return JSON.parse(localStorage.getItem("tasksByDate")||"{}")
+  });
+
+  useEffect(()=>{
+    localStorage.setItem("tasksByDate",JSON.stringify(allTasks));
+  },[allTasks]);
+
 
   // ✅ STRING formatta tarih (bozmuyoruz)
   const [selectedDate, setSelectedDate] = useState(
@@ -69,16 +80,23 @@ export default function DashboardLayout() {
         </div>
 
         {/* SAYFALAR */}
-        {active === "today" && <TaskBoard selectedDate={selectedDate} />}
+        {active === "today" &&(
+          <TaskBoard
+            selectedDate={selectedDate}
+            allTasks={allTasks}
+            setAllTasks={setAllTasks}
+          />       
+        )}
 
         {active === "weekly" && (
           <WeeklyView
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
+            allTasks={allTasks}
           />
         )}
 
-        {active === "stats" && <div>📊 İstatistik</div>}
+        {active === "stats" && <StatsView allTasks={allTasks} />}
         {active === "settings" && <div>⚙️ Ayarlar</div>}
       </div>
 

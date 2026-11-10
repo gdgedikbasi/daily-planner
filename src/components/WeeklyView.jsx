@@ -1,9 +1,6 @@
 import { useMemo } from "react";
 
-export default function WeeklyView({ selectedDate, setSelectedDate }) {
-
-  // 🔥 localStorage'dan taskları çek
-  const allTasks = JSON.parse(localStorage.getItem("tasksByDate") || "{}");
+export default function WeeklyView({ selectedDate, setSelectedDate, allTasks}) {
 
   // ✅ DATE FORMAT (STRING → YYYY-MM-DD)
   const formatDate = (d) =>

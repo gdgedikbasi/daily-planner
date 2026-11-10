@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { CheckCircle, Circle, Trash2, Pin } from "lucide-react";
 import { Reorder, motion } from "framer-motion";
 import { calculateStats } from "../utils/taskStats";
 
 
-export default function TaskBoard({ selectedDate }) {
+export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
   const [task, setTask] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [dueTime, setDueTime] = useState("");
@@ -13,11 +13,6 @@ export default function TaskBoard({ selectedDate }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter,setFilter]=useState("all");
 
-
-  const [allTasks, setAllTasks] = useState(() => {
-    const saved = localStorage.getItem("tasksByDate");
-    return saved ? JSON.parse(saved) : {};
-  });
 
   const today = selectedDate;
   const tasks = useMemo(() => allTasks[today] || [], [allTasks, today]);
@@ -57,10 +52,7 @@ export default function TaskBoard({ selectedDate }) {
     });
   }, [sortedTasks,searchQuery,filter]);
 
-  useEffect(() => {
-    localStorage.setItem("tasksByDate", JSON.stringify(allTasks));
-  }, [allTasks]);
-
+ 
   // ✅ SAFE STATE UPDATE
   const updateTasks = (newTasks) => {
     setAllTasks((prev) => ({
