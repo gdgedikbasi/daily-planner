@@ -1,49 +1,46 @@
-export default function Sidebar({active, setActive}) {
-    return(
-        <div style={styles.sidebar}>
-            <h2 style={{marginBottom:30}}>📅 Planner</h2>
-            <p style={active === "today" ? styles.active : styles.item}
-               onClick={() => setActive("today")}>
-            📌 Bugün
-            </p>
+export default function Sidebar({active, setActive, isOpen, onClose}) {
+    const handleNavigation=(view)=>{
+      setActive(view);
+      onClose();
+    };
 
-            <p style={active === "weekly" ? styles.active : styles.item}
-               onClick={() => setActive("weekly")}>
-            📆 Haftalık
-            </p>
+    return (
+    <div className={`sidebar ${isOpen ? "sidebar-open" : ""}`}>
+      <div className="sidebar-header">
+        <h2>📅 Planner</h2>
+        <button className="sidebar-close" onClick={onClose}>
+          ✕
+        </button>
+      </div>
 
-            <p style={active === "stats" ? styles.active : styles.item}
-               onClick={() => setActive("stats")}>
-            📊 İstatistik
-            </p>
+      <p
+        className={active === "today" ? "sidebar-item active" : "sidebar-item"}
+        onClick={() => handleNavigation("today")}
+      >
+        📌 Bugün
+      </p>
 
-            <p style={active === "settings" ? styles.active : styles.item}
-               onClick={() => setActive("settings")}>
-            ⚙️ Ayarlar
-            </p>
-        </div>
-    );
+      <p
+        className={active === "weekly" ? "sidebar-item active" : "sidebar-item"}
+        onClick={() => handleNavigation("weekly")}
+      >
+        📆 Haftalık
+      </p>
+
+      <p
+        className={active === "stats" ? "sidebar-item active" : "sidebar-item"}
+        onClick={() => handleNavigation("stats")}
+      >
+        📊 İstatistik
+      </p>
+
+      <p
+        className={active === "settings" ? "sidebar-item active" : "sidebar-item"}
+        onClick={() => handleNavigation("settings")}
+      >
+        ⚙️ Ayarlar
+      </p>
+    </div>
+  );
 }
 
-const styles = {
-  sidebar: {
-    width: "220px",
-    height: "100vh",
-    background: "#111827",
-    padding: "20px",
-    color: "#fff",
-  },
-
-  item: {
-    cursor: "pointer",
-    padding: "10px",
-    borderRadius: 8,
-  },
-
-  active: {
-    cursor: "pointer",
-    padding: "10px",
-    borderRadius: 8,
-    background: "#6366f1",
-  },
-};

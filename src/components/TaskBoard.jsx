@@ -166,7 +166,7 @@ export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
 
 
   return (
-    <div style={styles.container}>
+    <div className="task-board" style={styles.container}>
       <h2>Bugün ne yapacaksın?</h2>
 
       <div style={styles.progressBox}>
@@ -179,7 +179,7 @@ export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
       </div>
 
       {/*Gelişmiş İstatistikler*/}
-      <div style={styles.statsGrid}>
+      <div className="task-stats-grid"  style={styles.statsGrid}>
         <div style={styles.statCard}>
           <div style={styles.statLabel}>Toplam Görev</div>
           <div style={styles.statValue}>{total}</div>
@@ -203,7 +203,7 @@ export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
 
 
       {/*Görev Arama*/}
-      <div style={styles.searchBox}>
+      <div className="task-search-box" style={styles.searchBox}>
         <input
           type="text"
           placeholder="Görev ara..."
@@ -236,7 +236,7 @@ export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
       </div>
 
 
-      <div style={styles.inputBox}>
+      <div className="task-input-box" style={styles.inputBox}>
         <input
           style={styles.input}
           value={task}
@@ -253,7 +253,7 @@ export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
       </div>
 
       
-      <div style={styles.deadlineBox}>
+      <div className="deadline-box" style={styles.deadlineBox}>
         <label style={styles.deadlineLabel}>
           Son tarih:
           <input
@@ -286,9 +286,11 @@ export default function TaskBoard({ selectedDate,allTasks,setAllTasks }) {
           <Reorder.Item key={t.id} value={t} dragListener={filter === "all" && !searchQuery.trim()}>
             <motion.div
               layout
+              className="task-card"
               style={{
+                
                 ...styles.task,
-                borderLeft: `4px solid ${
+                                borderLeft: `4px solid ${
                   t.priority === "high"
                     ? "#ef4444"
                     : t.priority === "medium"

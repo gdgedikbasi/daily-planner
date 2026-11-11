@@ -23,6 +23,7 @@ export default function DashboardLayout() {
     localStorage.setItem("tasksByDate",JSON.stringify(allTasks));
   },[allTasks]);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // ✅ STRING formatta tarih (bozmuyoruz)
   const [selectedDate, setSelectedDate] = useState(
@@ -42,15 +43,27 @@ export default function DashboardLayout() {
 };
 
   return (
-    <div style={styles.container}>
+    <div className="dashboard-container" >
+      <button 
+        className="menu-toggle"
+        onClick={()=>setIsSidebarOpen(!isSidebarOpen)}
+      >
+        ☰
+      </button>
+
       {/* Sidebar */}
-      <Sidebar active={active} setActive={setActive} />
+      <Sidebar 
+        active={active} 
+        setActive={setActive} 
+        isOpen={isSidebarOpen}
+        onClose={()=>setIsSidebarOpen(false)}
+      />
 
       {/* ORTA ALAN */}
-      <div style={styles.content}>
+      <div className="dashboard-content"  >
         
         {/* 🔥 TARİH BAR */}
-        <div style={styles.dateBar}>
+        <div className="date-bar" >
           <button
             onClick={() => changeDay(-1)}
             style={styles.arrowBtn}

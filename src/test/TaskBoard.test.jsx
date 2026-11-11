@@ -1,7 +1,26 @@
+
+import { useEffect, useState } from "react";
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TaskBoard from "../components/TaskBoard";
+
+// DashboardLayout bileşeninin görev yönetimini test ortamında taklit ediyoruz.
+function TestWrapper({ selectedDate, initialTasks = {} }) {
+  const [allTasks, setAllTasks] = useState(initialTasks);
+
+  useEffect(() => {
+    localStorage.setItem("tasksByDate", JSON.stringify(allTasks));
+  }, [allTasks]);
+
+  return (
+    <TaskBoard
+      selectedDate={selectedDate}
+      allTasks={allTasks}
+      setAllTasks={setAllTasks}
+    />
+  );
+}
 
 describe("TaskBoard görev işlemleri", () => {
   beforeEach(() => {
@@ -12,7 +31,7 @@ describe("TaskBoard görev işlemleri", () => {
   it("yeni bir görev ekler", async () => {
     const user = userEvent.setup();
 
-    render(<TaskBoard selectedDate="2026-11-03" />);
+    render(<TestWrapper selectedDate="2026-11-03" />);
 
     const inputs = screen.getAllByRole("textbox");
     const taskInput = inputs[1];
@@ -22,67 +41,69 @@ describe("TaskBoard görev işlemleri", () => {
 
     expect(screen.getByText("Kitap oku")).toBeInTheDocument();
 
-    const savedTasks = JSON.parse(
-      localStorage.getItem("tasksByDate")
-    );
-
-    expect(savedTasks["2026-11-03"]).toHaveLength(1);
-    expect(savedTasks["2026-11-03"][0].text).toBe("Kitap oku");
+    await waitFor(() => {
+      const savedTasks = JSON.parse(localStorage.getItem("tasksByDate"));
+      expect(savedTasks["2026-11-03"]).toHaveLength(1);
+      expect(savedTasks["2026-11-03"][0].text).toBe("Kitap oku");
+    });
   });
 
   // 2. Görev tamamlama testi
   it("bir görevi tamamlandı olarak işaretler", async () => {
     const user = userEvent.setup();
 
-    localStorage.setItem(
-      "tasksByDate",
-      JSON.stringify({
-        "2026-11-03": [
-          {
-            id: 1,
-            text: "Kitap oku",
-            done: false,
-            priority: "medium",
-            pinned: false,
-          },
-        ],
-      })
-    );
+    const initialTasks = {
+      "2026-11-03": [
+        {
+          id: 1,
+          text: "Kitap oku",
+          done: false,
+          priority: "medium",
+          pinned: false,
+        },
+      ],
+    };
 
-    render(<TaskBoard selectedDate="2026-11-03" />);
+    render(
+      <TestWrapper
+        selectedDate="2026-11-03"
+        initialTasks={initialTasks}
+      />
+    );
 
     const taskText = screen.getByText("Kitap oku");
     const completeButton = taskText.parentElement.previousSibling;
 
     await user.click(completeButton);
 
-    const savedTasks = JSON.parse(
-      localStorage.getItem("tasksByDate")
-    );
-
-    expect(savedTasks["2026-11-03"][0].done).toBe(true);
+    await waitFor(() => {
+      const savedTasks = JSON.parse(localStorage.getItem("tasksByDate"));
+      expect(savedTasks["2026-11-03"][0].done).toBe(true);
+    });
   });
 
   // 3. Görev silme testi
   it("bir görevi siler", async () => {
     const user = userEvent.setup();
 
-    localStorage.setItem(
-      "tasksByDate",
-      JSON.stringify({
-        "2026-11-03": [
-          {
-            id: 1,
-            text: "Kitap oku",
-            done: false,
-            priority: "medium",
-            pinned: false,
-          },
-        ],
-      })
-    );
+    const initialTasks = {
+      "2026-11-03": [
+        {
+          id: 1,
+          text: "Kitap oku",
+          done: false,
+          priority: "medium",
+          pinned: false,
+        },
+      ],
+    };
 
-    render(<TaskBoard selectedDate="2026-11-03" />);
+    render(
+      <TestWrapper
+        selectedDate="2026-11-03"
+        initialTasks={initialTasks}
+      />
+    );
 
     expect(screen.getByText("Kitap oku")).toBeInTheDocument();
 
@@ -90,41 +111,41 @@ describe("TaskBoard görev işlemleri", () => {
 
     expect(screen.queryByText("Kitap oku")).not.toBeInTheDocument();
 
-    const savedTasks = JSON.parse(
-      localStorage.getItem("tasksByDate")
-    );
-
-    expect(savedTasks["2026-11-03"]).toHaveLength(0);
+    await waitFor(() => {
+      const savedTasks = JSON.parse(localStorage.getItem("tasksByDate"));
+      expect(savedTasks["2026-11-03"]).toHaveLength(0);
+    });
   });
 
-  //4. Görev Sabitleme Testi
-  it("Bir görevi sabitler",async()=>{
-    const user=userEvent.setup();
-    const today = new Date().toISOString().split("T")[0];
+  // 4. Görev sabitleme testi
+  it("bir görevi sabitler", async () => {
+    const user = userEvent.setup();
+    const today = "2026-11-11";
 
-    localStorage.setItem(
-      "tasksByDate",
-      JSON.stringify({
-        [today]:[
-          {
-            id:1,
-            text:"Kitap oku",
-            done:false,
-            priority:"medium",
-            pinned:false,
-          },
-        ],
-      })
+    const initialTasks = {
+      [today]: [
+        {
+          id: 1,
+          text: "Kitap oku",
+          done: false,
+          priority: "medium",
+          pinned: false,
+        },
+      ],
+    };
+
+    render(
+      <TestWrapper
+        selectedDate={today}
+        initialTasks={initialTasks}
+      />
     );
-
-    render(<TaskBoard selectedDate={today} />);
 
     await user.click(screen.getByTestId("pin-task"));
 
-    const savedTasks = JSON.parse(
-      localStorage.getItem("tasksByDate")
-    );
-
-    expect(savedTasks[today][0].pinned).toBe(true);
-  })
+    await waitFor(() => {
+      const savedTasks = JSON.parse(localStorage.getItem("tasksByDate"));
+      expect(savedTasks[today][0].pinned).toBe(true);
+    });
+  });
 });
